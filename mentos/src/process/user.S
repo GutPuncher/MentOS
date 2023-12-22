@@ -17,15 +17,6 @@
 ; |      CS        |
 ; |      EIP       |
 
-; We can use the following macros to access the arguments ONLY AFTER 0x23 is
-; pushed onto the stack, in fact, the first argument is after 0x08 because
-; we just pushed first `ebp` and then `0x23`.
-%define ARG0 [ebp + 0x08] ; Argument 0
-%define ARG1 [ebp + 0x0C] ; Argument 1
-%define ARG2 [ebp + 0x10] ; Argument 2
-%define ARG3 [ebp + 0x14] ; Argument 3
-%define ARG4 [ebp + 0x18] ; Argument 4
-
 ; -----------------------------------------------------------------------------
 ; SECTION (text)
 ; -----------------------------------------------------------------------------
@@ -60,7 +51,7 @@ enter_userspace:
     ;---------------------------------------------------------------------------
 
     ;==== (ESP) Stack address ==================================================
-    mov eax, ARG1           ; get uintptr_t stack
+    mov eax, [ebp + 0x0C]           ; get uintptr_t stack
     push eax                ; push process's stack address on Kernel's stack
     ;---------------------------------------------------------------------------
 
@@ -76,7 +67,7 @@ enter_userspace:
     ;---------------------------------------------------------------------------
 
     ;==== (EIP) Entry point ====================================================
-    mov eax, ARG0           ; get uintptr_t location
+    mov eax, [ebp + 0x08]           ; get uintptr_t location
     push eax                ; push uintptr_t location on Kernel's stack
     ;---------------------------------------------------------------------------
 
