@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 
     if (semctl(semid, 0, SETALL, &arg) == -1) {
         perror("Failed to set semaphores");
-        return 1;
+        return EXIT_FAILURE;
     }
 
     if (!fork()) {
@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
     }
     if (semctl(semid, 0, IPC_RMID, 0) == -1) {
         perror("Failed to remove IPC");
-        return 1;
+        return EXIT_FAILURE;
     }
-    return 0;
+    return EXIT_SUCCESS;
 }

@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 
     if (setenv("ENV_VAR", "pwd0", 0) == -1) {
         printf("Failed to set env: `PWD`\n");
-        return 1;
+        return EXIT_FAILURE;
     }
 
     if (fork() == 0) {
@@ -24,5 +24,5 @@ int main(int argc, char *argv[])
     }
 
     wait(&status);
-    return 0;
+    return EXIT_SUCCESS;
 }

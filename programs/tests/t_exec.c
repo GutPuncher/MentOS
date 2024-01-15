@@ -22,12 +22,12 @@ int main(int argc, char *argv[])
     int status;
     if (argc != 2) {
         __print_usage(argc, argv);
-        return 1;
+        return EXIT_FAILURE;
     }
 
     if (setenv("ENV_VAR", "pwd0", 0) == -1) {
         printf("Failed to set env: `ENV_VAR`\n");
-        return 1;
+        return EXIT_FAILURE;
     }
 
     char *file        = "echo";
@@ -54,11 +54,11 @@ int main(int argc, char *argv[])
             execvpe(file, exec_argv, exec_envp);
         } else {
             __print_usage(argc, argv);
-            return 1;
+            return EXIT_FAILURE;
         }
         printf("Exec failed.\n");
-        return 1;
+        return EXIT_FAILURE;
     }
     wait(&status);
-    return 0;
+    return EXIT_SUCCESS;
 }

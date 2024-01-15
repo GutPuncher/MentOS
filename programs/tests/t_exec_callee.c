@@ -11,8 +11,8 @@ int main(int argc, char *argv[])
     char *ENV_VAR = getenv("ENV_VAR");
     if (ENV_VAR == NULL) {
         printf("Failed to get env: `ENV_VAR`\n");
-        return 1;
+        return EXIT_FAILURE;
     }
     printf("ENV_VAR = %s\n", ENV_VAR);
-    return 0;
+    return EXIT_SUCCESS;
 }

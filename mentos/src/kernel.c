@@ -43,28 +43,6 @@ char *module_start[MAX_MODULES];
 /// Describe end address of grub multiboot modules.
 char *module_end[MAX_MODULES];
 
-// Everything is defined in kernel.ld.
-
-/// Points at the multiheader grub info, starting address.
-extern uint32_t _multiboot_header_start;
-/// Points at the multiheader grub info, ending address.
-extern uint32_t _multiboot_header_end;
-/// Points at the kernel code, starting address.
-extern uint32_t _text_start;
-/// Points at the kernel code, ending address.
-extern uint32_t _text_end;
-/// Points at the read-only kernel data, starting address.
-extern uint32_t _rodata_start;
-/// Points at the read-only kernel data, ending address.
-extern uint32_t _rodata_end;
-/// Points at the read-write kernel data initialized, starting address.
-extern uint32_t _data_start;
-/// Points at the read-write kernel data initialized, ending address.
-extern uint32_t _data_end;
-/// Points at the read-write kernel data uninitialized an kernel stack, starting address.
-extern uint32_t _bss_start;
-/// Points at the read-write kernel data uninitialized an kernel stack, ending address.
-extern uint32_t _bss_end;
 /// Points at the top of the kernel stack.
 extern uint32_t stack_top;
 /// Points at the bottom of the kernel stack.
@@ -107,8 +85,8 @@ int kmain(boot_info_t *boot_informations)
     boot_info = *boot_informations;
     // Am I booted by a Multiboot-compliant boot loader?
     if (boot_info.magic != MULTIBOOT_BOOTLOADER_MAGIC) {
-        printf("Invalid magic number: 0x%x\n", boot_info.magic);
-        return 1;
+        pr_emerg("Invalid magic number: 0x%x\n", boot_info.magic);
+        while (1) {}
     }
     // Set the initial esp.
     initial_esp = boot_info.stack_base;
@@ -131,7 +109,7 @@ int kmain(boot_info_t *boot_informations)
     printf("Initialize modules...");
     if (!init_modules(boot_info.multiboot_header)) {
         print_fail();
-        return 1;
+        while (1) {}
     }
     print_ok();
 
@@ -140,7 +118,7 @@ int kmain(boot_info_t *boot_informations)
     printf("Initialize physical memory manager...");
     if (!pmmngr_init(&boot_info)) {
         print_fail();
-        return 1;
+        while (1) {}
     }
     print_ok();
 
@@ -216,7 +194,7 @@ int kmain(boot_info_t *boot_informations)
     printf("Initialize ATA devices...");
     if (ata_initialize()) {
         pr_emerg("Failed to initialize ATA devices!\n");
-        return 1;
+        while (1) {}
     }
     print_ok();
 
@@ -225,7 +203,7 @@ int kmain(boot_info_t *boot_informations)
     printf("Initialize EXT2 filesystem...");
     if (ext2_initialize()) {
         pr_emerg("Failed to initialize EXT2 filesystem!\n");
-        return 1;
+        while (1) {}
     }
     print_ok();
 
@@ -234,7 +212,7 @@ int kmain(boot_info_t *boot_informations)
     printf("Mount EXT2 filesystem...");
     if (do_mount("ext2", "/", "/dev/hda")) {
         pr_emerg("Failed to mount EXT2 filesystem...\n");
-        return 1;
+        while (1) {}
     }
     print_ok();
 
@@ -244,7 +222,7 @@ int kmain(boot_info_t *boot_informations)
     if (procfs_module_init()) {
         print_fail();
         pr_emerg("Failed to register `procfs`!\n");
-        return 1;
+        while (1) {}
     }
     print_ok();
 
@@ -253,7 +231,7 @@ int kmain(boot_info_t *boot_informations)
     printf("    Mounting 'procfs'...");
     if (do_mount("procfs", "/proc", NULL)) {
         pr_emerg("Failed to mount procfs at `/proc`!\n");
-        return 1;
+        while (1) {}
     }
     print_ok();
 
@@ -263,7 +241,7 @@ int kmain(boot_info_t *boot_informations)
     if (procv_module_init()) {
         print_fail();
         pr_emerg("Failed to initialize `/proc/video`!\n");
-        return 1;
+        while (1) {}
     }
     print_ok();
 
@@ -273,7 +251,7 @@ int kmain(boot_info_t *boot_informations)
     if (procs_module_init()) {
         print_fail();
         pr_emerg("Failed to initialize proc system entries!\n");
-        return 1;
+        while (1) {}
     }
     print_ok();
 
@@ -283,7 +261,7 @@ int kmain(boot_info_t *boot_informations)
     if (procipc_module_init()) {
         print_fail();
         pr_emerg("Failed to initialize the IPC information system!\n");
-        return 1;
+        while (1) {}
     }
     print_ok();
 
@@ -293,7 +271,7 @@ int kmain(boot_info_t *boot_informations)
     if (sem_init()) {
         print_fail();
         pr_emerg("Failed to initialize the IPC/SEM system!\n");
-        return 1;
+        while (1) {}
     }
     print_ok();
 
@@ -303,7 +281,7 @@ int kmain(boot_info_t *boot_informations)
     if (msq_init()) {
         print_fail();
         pr_emerg("Failed to initialize the IPC/MSQ system!\n");
-        return 1;
+        while (1) {}
     }
     print_ok();
 
@@ -313,7 +291,7 @@ int kmain(boot_info_t *boot_informations)
     if (shm_init()) {
         print_fail();
         pr_emerg("Failed to initialize the IPC/SHM system!\n");
-        return 1;
+        while (1) {}
     }
     print_ok();
 
@@ -328,7 +306,7 @@ int kmain(boot_info_t *boot_informations)
     if (ps2_initialize()) {
         print_fail();
         pr_emerg("Failed to initialize proc system entries!\n");
-        return 1;
+        while (1) {}
     }
     print_ok();
 
@@ -365,7 +343,7 @@ int kmain(boot_info_t *boot_informations)
     printf("Init process management...");
     if (!init_tasking()) {
         print_fail();
-        return 1;
+        while (1) {}
     }
     print_ok();
 
@@ -375,7 +353,7 @@ int kmain(boot_info_t *boot_informations)
     printf("Initialize scheduler feedback system...");
     if (!scheduler_feedback_init()) {
         print_fail();
-        return 1;
+        while (1) {}
     }
     print_ok();
 #endif
@@ -385,7 +363,7 @@ int kmain(boot_info_t *boot_informations)
     printf("Initialize scheduler feedback system (2)...");
     if (procfb_module_init()) {
         print_fail();
-        return 1;
+        while (1) {}
     }
     print_ok();
 
@@ -395,7 +373,7 @@ int kmain(boot_info_t *boot_informations)
     task_struct *init_p = process_create_init("/bin/init");
     if (!init_p) {
         print_fail();
-        return 1;
+        while (1) {}
     }
     print_ok();
 
@@ -404,7 +382,7 @@ int kmain(boot_info_t *boot_informations)
     printf("Initialize floating point unit...");
     if (!fpu_install()) {
         print_fail();
-        return 1;
+        while (1) {}
     }
     print_ok();
 
@@ -413,7 +391,7 @@ int kmain(boot_info_t *boot_informations)
     printf("Initialize signals...");
     if (!signals_init()) {
         print_fail();
-        return 1;
+        while (1) {}
     }
     print_ok();
 
@@ -432,5 +410,5 @@ int kmain(boot_info_t *boot_informations)
     for (;;) {}
     // We should not be here.
     pr_emerg("Dear developer, we have to talk...\n");
-    return 1;
+    while (1) {}
 }

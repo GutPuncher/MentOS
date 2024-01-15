@@ -27,12 +27,12 @@ int main(int argc, char **argv)
             printf("%d) pid_child: %d, gid_child: %d, ppid_child: %d, sid_child: %d\n",
                    i, pid_child, gid_child, ppid_child, sid_child);
             sleep(5);
-            exit(0);
+            return EXIT_SUCCESS;
         }
     }
     //int status;
     //while (wait(&status) > 0)
     //    ;
 
-    return 0;
+    return EXIT_SUCCESS;
 }

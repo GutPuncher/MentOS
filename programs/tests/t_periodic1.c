@@ -3,10 +3,11 @@
 /// @copyright (c) 2014-2023 This file is distributed under the MIT License.
 /// See LICENSE.md for details.
 
-#include <stdio.h>
-#include <sched.h>
 #include <sys/unistd.h>
 #include <strerror.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <sched.h>
 
 int main(int argc, char *argv[])
 {
@@ -42,5 +43,5 @@ int main(int argc, char *argv[])
             break;
         }
     }
-    return 0;
+    return EXIT_SUCCESS;
 }

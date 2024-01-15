@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
         action.sa_handler = child_sigusr1_handler;
         if (sigaction(SIGUSR1, &action, NULL) == -1) {
             printf("Failed to set signal handler (%s).\n", SIGUSR1, strerror(errno));
-            return 1;
+            return EXIT_FAILURE;
         }
         child_process();
     } else {
@@ -61,5 +61,5 @@ int main(int argc, char *argv[])
     int status;
     wait(&status);
     printf("main : end (%d)\n", status);
-    return 0;
+    return EXIT_SUCCESS;
 }

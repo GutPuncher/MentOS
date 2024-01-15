@@ -16,7 +16,6 @@ void sig_handler(int sig)
 {
     printf("handler(%d) : Starting handler.\n", sig);
     if (sig == SIGABRT) {
-
         static int counter = 0;
         counter += 1;
 
@@ -38,8 +37,10 @@ int main(int argc, char *argv[])
 
     if (sigaction(SIGABRT, &action, NULL) == -1) {
         printf("Failed to set signal handler (%s).\n", SIGABRT, strerror(errno));
-        return 1;
+        return EXIT_FAILURE;
     }
 
     abort();
+
+    return EXIT_SUCCESS;
 }

@@ -15,6 +15,8 @@ option(USE_BUDDY_SYSTEM "Build using the buddysystem written by the user." OFF)
 option(ENABLE_CACHE_TRACE "Enables cache tracing." OFF)
 # Enables memory allocation tracing.
 option(ENABLE_ALLOC_TRACE "Enables memory allocation tracing." OFF)
+# Enables scheduling feedback on terminal.
+option(ENABLE_SCHEDULER_FEEDBACK "Enables scheduling feedback on terminal." OFF)
 
 # =============================================================================
 # SOURCES

@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     action.sa_handler = sigusr1_handler;
     if (sigaction(SIGUSR1, &action, NULL) == -1) {
         printf("Failed to set signal handler (%s).\n", SIGUSR1, strerror(errno));
-        return 1;
+        return EXIT_FAILURE;
     }
 
     printf("main : Calling handler (%d).\n", SIGUSR1);
@@ -41,8 +41,9 @@ int main(int argc, char *argv[])
     int ret = kill(getpid(), SIGUSR1);
     printf("main : Returning from handler (%d): %d.\n", SIGUSR1, ret);
     printf("main : value : %d\n", values);
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 4; ++i) {
         printf("values[%d] : `%d`\n", i, values[i]);
+    }
     free(values);
-    return 0;
+    return EXIT_SUCCESS;
 }

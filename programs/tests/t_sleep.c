@@ -17,5 +17,5 @@ int main(int argc, char *argv[])
     sleep(4);
     printf("COMPLETED.\n");
 
-    return 0;
+    return EXIT_SUCCESS;
 }

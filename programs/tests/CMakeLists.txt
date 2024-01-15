@@ -59,7 +59,7 @@ foreach(FILE_NAME ${TESTS})
     # EXECUTABLE
     # =========================================================================
     # Create the target.
-    add_executable(${TARGET_NAME} ${FILE_NAME})
+    add_executable(${TARGET_NAME} ${CMAKE_SOURCE_DIR}/programs/tests/${FILE_NAME})
     # Add the dependency to libc.
     add_dependencies(${TARGET_NAME} libc)
     # Add the includes.

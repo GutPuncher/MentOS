@@ -5,6 +5,7 @@
 
 #include <sys/unistd.h>
 #include <sys/wait.h>
+#include <stdlib.h>
 #include <stdio.h>
 
 int main(int argc, char *argv[])
@@ -14,9 +15,9 @@ int main(int argc, char *argv[])
     for (int i = 0; i < 10; ++i) {
         if ((cpid = fork()) == 0) {
             execl("/bin/tests/t_alarm", "t_alarm", NULL);
-            return 0;
+            return EXIT_SUCCESS;
         }
     }
     while (wait(NULL) != -1) continue;
-    return 0;
+    return EXIT_SUCCESS;
 }

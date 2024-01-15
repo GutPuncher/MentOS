@@ -30,7 +30,7 @@ message(STATUS "System name    : ${CMAKE_HOST_SYSTEM_NAME}")
 message(STATUS "Kernel version : ${CMAKE_SYSTEM_VERSION}")
 if((${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Darwin") OR APPLE)
     # Specify the linker flags.
-    # set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -nostdlib")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -nostdlib")
 elseif((${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Windows") OR WIN32)
   # Windows set(EMULATOR_FLAGS ${EMULATOR_FLAGS} -sdl)
 else()
@@ -58,7 +58,7 @@ else()
         # set(EMULATOR_FLAGS ${EMULATOR_FLAGS} -sdl)
     endif()
     # Speicfy the linker.
-    # set(CMAKE_LINKER ld)
+    set(CMAKE_LINKER ld)
 endif()
 
 # Enable the assembly language.
@@ -97,6 +97,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-pic")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fomit-frame-pointer")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -march=i686")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ffreestanding")
 if(CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL 10)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fcommon")
 endif()
@@ -201,7 +202,8 @@ add_custom_target(
     COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/get_text_address.sh ${CMAKE_BINARY_DIR}/programs/prog_* >> ${CMAKE_BINARY_DIR}/.gdbinit
     COMMAND echo "break boot.c: boot_main" >> ${CMAKE_BINARY_DIR}/.gdbinit
     COMMAND echo "break kernel.c: kmain" >> ${CMAKE_BINARY_DIR}/.gdbinit
-    COMMAND echo "target remote localhost:1234" >> ${CMAKE_BINARY_DIR}/.gdbinit
+    # Create the GDB connection file.
+    COMMAND echo "target remote localhost:1234" > ${CMAKE_BINARY_DIR}/gdb.run
     DEPENDS ${CMAKE_BINARY_DIR}/mentos/kernel_bootloader.bin
     DEPENDS ${CMAKE_BINARY_DIR}/mentos/kernel.bin
     DEPENDS all_programs

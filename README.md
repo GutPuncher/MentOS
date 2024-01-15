@@ -5,24 +5,29 @@
 [![forthebadge](https://forthebadge.com/images/badges/for-you.svg)](https://forthebadge.com)
 
 [![Ubuntu](https://github.com/mentos-team/MentOS/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/mentos-team/MentOS/actions/workflows/ubuntu.yml)
-[![MacOS](https://github.com/mentos-team/MentOS/actions/workflows/macos.yml/badge.svg)](https://github.com/mentos-team/MentOS/actions/workflows/macos.yml)
 
 ## Table of Contents
 
- 1. [What is MentOS](#1-what-is-mentos)
- 2. [Implemented features](#2-implemented-features)
- 3. [Prerequisites](#3-prerequisites)
- 4. [Compiling MentOS](#4-compiling-mentos)
- 5. [Generating the EXT2 filesystem](#5-generating-the-ext2-filesystem)
- 6. [Running MentOS](#6-running-mentos)
- 7. [Running MentOS from GRUB](#7-running-mentos-from-grub)
- 8. [Running and adding new programs to MentOS](#8-running-and-adding-new-programs-to-mentos)
- 9. [Kernel logging](#9-kernel-logging)
- 10. [Change the scheduling algorithm](#10-change-the-scheduling-algorithm)
- 11. [Debugging the kernel](#11-debugging-the-kernel)
- 12. [Contributors](#12-contributors)
+- [MentOS (Mentoring Operating System)](#mentos-mentoring-operating-system)
+  - [Table of Contents](#table-of-contents)
+  - [What is MentOS](#what-is-mentos)
+  - [Implemented features](#implemented-features)
+  - [Prerequisites](#prerequisites)
+    - [Installing the prerequisites](#installing-the-prerequisites)
+  - [Compiling MentOS](#compiling-mentos)
+  - [Generating the EXT2 filesystem](#generating-the-ext2-filesystem)
+  - [Running MentOS](#running-mentos)
+  - [Running MentOS from GRUB](#running-mentos-from-grub)
+  - [Running and adding new programs to MentOS](#running-and-adding-new-programs-to-mentos)
+    - [Create a new program](#create-a-new-program)
+    - [Add the new program to the list of compiled sources](#add-the-new-program-to-the-list-of-compiled-sources)
+    - [Running a program or a test](#running-a-program-or-a-test)
+  - [Kernel logging](#kernel-logging)
+  - [Change the scheduling algorithm](#change-the-scheduling-algorithm)
+  - [Debugging the kernel](#debugging-the-kernel)
+  - [Contributors](#contributors)
 
-## 1. What is MentOS
+## What is MentOS
 
 MentOS (Mentoring Operating System) is an open source educational operating
 system. The goal of MentOS is to provide a project environment that is realistic
@@ -46,7 +51,8 @@ Gualandri.
 
 *[Back to the Table of Contents](#table-of-contents)*
 
-## 2. Implemented features
+## Implemented features
+
 Follows the list of implemented features:
 
 **Processes and Events**
@@ -91,22 +97,18 @@ I will try to keep it updated...
 
 *[Back to the Table of Contents](#table-of-contents)*
 
-## 3. Prerequisites
+## Prerequisites
 
 MentOS is compatible with the main **unix-based** operating systems. It has been
-tested with *Ubuntu*, *WSL1*, *WSL2*, and  *MacOS*.
+tested with *Ubuntu*, and under Windows with *WSL1* and *WSL2*.
 
-### 3.1. Generic Prerequisites
+For **compiling** the system we need:
 
-#### 3.1.1. Compile
-
-For compiling the system:
-
- - nasm
+ - git
  - gcc
+ - nasm
  - make
  - cmake
- - git
  - ccmake (suggested)
  - e2fsprogs (should be already installed)
 
@@ -115,43 +117,29 @@ Under **MacOS**, for compiling, you have additional dependencies:
  - i386-elf-binutils
  - i386-elf-gcc
 
-#### 3.1.2. Execute
-
-To execute the operating system, you need to install:
+For **executing** the operating system we need:
 
  - qemu-system-i386 (or qemu-system-x86)
 
-#### 3.1.3. Debug
-
-For debugging we suggest using:
+For **debugging** we suggest using:
 
  - gdb or cgdb
 
-### 3.2. installation Prerequisites
+### Installing the prerequisites
 
 Under **Ubuntu**, you can type the following commands:
 
 ```bash
 sudo apt-get update && sudo apt-get upgrade -y
-sudo apt-get install -y build-essential git cmake qemu-system-x86 nasm e2fsprogs
+sudo apt-get install -y git build-essential nasm make cmake cmake-curses-gui e2fsprogs
+sudo apt-get install -y qemu-system-x86
 sudo apt-get install -y gdb cgdb
 ```
 Note: Older versions might have `qemu-system-i386` instead of `qemu-system-x86`.
 
-Under **MacOS** you also need to install the i386-elf cross-compiler. The
-simplest installation method is through Homebrew package manager.
-Install [Homebrew](https://brew.sh) if you don't already have it, and
-then type the following commands:
-
-```bash
-brew update && brew upgrade
-brew install i386-elf-binutils i386-elf-gcc git cmake qemu nasm e2fsprogs
-brew install gdb cgdb #<- for debug only
-```
-
 *[Back to the Table of Contents](#table-of-contents)*
 
-## 4. Compiling MentOS
+## Compiling MentOS
 
 Compile MentOS with:
 
@@ -165,7 +153,7 @@ make
 
 *[Back to the Table of Contents](#table-of-contents)*
 
-## 5. Generating the EXT2 filesystem
+## Generating the EXT2 filesystem
 
 Generate the EXT2 filesystem with:
 
@@ -176,7 +164,7 @@ you just need to generate the filesystem once. If you change a `program` you nee
 
 *[Back to the Table of Contents](#table-of-contents)*
 
-## 6. Running MentOS
+## Running MentOS
 
 Boot MentOS with qemu:
 
@@ -188,7 +176,7 @@ To login, use one of the usernames listed in `files/etc/passwd`.
 
 *[Back to the Table of Contents](#table-of-contents)*
 
-## 7. Running MentOS from GRUB
+## Running MentOS from GRUB
 
 For booting MentOS from GRUB in QEMU we need the following tools:
 
@@ -211,11 +199,11 @@ make qemu-grub
 
 *[Back to the Table of Contents](#table-of-contents)*
 
-## 8. Running and adding new programs to MentOS
+## Running and adding new programs to MentOS
 
 This section explains how to add a new program to MentOS, and also how to run programs in mentos. It also explains how to add new tests, which are located in the `programs/tests` folder.
 
-### 8.1. Create a new program
+### Create a new program
 
 Head to the `programs` (or the `programs/tests`) folder. Create and open a new program, for instance a file called `hello_world.c`, with your preferred editor, and add this content to the file:
 ```C
@@ -228,7 +216,7 @@ int main(int argc, char *argv[])
 }
 ```
 
-### 8.2. Add the new program to the list of compiled sources
+### Add the new program to the list of compiled sources
 Now we can add the program to the list of files which are compiled and placed inside MentOS filesystem.
 The following procedure is the same for both `programs` and `programs/tests`, what changes is which `CMakeLists.txt` file we modify.
 
@@ -253,7 +241,7 @@ set(TESTS
 
 That's it, the `hello_world.c` file will be compiled and will appear inside the `/bin` or `/bin/tests` folder of MentOS.
 
-### 8.3. Running a program or a test
+### Running a program or a test
 Once you login into MentOS, if you placed your source code in `programs`, you can execute the program by simply typing:
 ```bash
 hello_world
@@ -268,7 +256,7 @@ However, the `/bin/tests` folder is not listed in `PATH`, so, if you want to exe
 
 *[Back to the Table of Contents](#table-of-contents)*
 
-## 9. Kernel logging
+## Kernel logging
 The kernel provides ways of printing logging messages *from* inside the kernel code *to* the bash where you executed the `make qemu`.
 
 These *logging* functions are:
@@ -322,7 +310,7 @@ This example sets the `__DEBUG_LEVEL__`, so that all the messages from `INFO` an
 
 *[Back to the Table of Contents](#table-of-contents)*
 
-## 10. Change the scheduling algorithm
+## Change the scheduling algorithm
 
 MentOS supports scheduling algorithms for aperiodic:
 
@@ -390,7 +378,7 @@ make qemu
 
 *[Back to the Table of Contents](#table-of-contents)*
 
-## 11. Debugging the kernel
+## Debugging the kernel
 
 If you want to use GDB to debug MentOS, first you need to compile everything:
 
@@ -450,7 +438,7 @@ to connect to the running process.
 
 *[Back to the Table of Contents](#table-of-contents)*
 
-## 12. Contributors
+## Contributors
 
 Project Manager:
 
@@ -472,5 +460,9 @@ Developers:
     - Soft IRQs
     - Timer
     - Signals
+* And many other valuable contributors
+  * [rouseabout](https://github.com/rouseabout)
+  * [seekbytes](https://github.com/seekbytes)
+  * [fischerling](https://github.com/fischerling)
 
 *[Back to the Table of Contents](#table-of-contents)*

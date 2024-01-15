@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
     action.sa_handler = alarm_handler;
     if (sigaction(SIGALRM, &action, NULL) == -1) {
         printf("Failed to set signal handler (%s).\n", SIGALRM, strerror(errno));
-        return 1;
+        return EXIT_FAILURE;
     }
 
     itimerval interval = { 0 };
@@ -57,5 +57,5 @@ int main(int argc, char *argv[])
     setitimer(ITIMER_REAL, &interval, NULL);
 
     while(1) { }
-    return 0;
+    return EXIT_SUCCESS;
 }

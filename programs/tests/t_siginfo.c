@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 
     if (sigaction(SIGFPE, &action, NULL) == -1) {
         printf("Failed to set signal handler (%s).\n", SIGFPE, strerror(errno));
-        return 1;
+        return EXIT_FAILURE;
     }
 
     printf("Diving by zero (unrecoverable)...\n");
@@ -48,4 +48,5 @@ int main(int argc, char *argv[])
         e -= 1;
     }
     printf("d: %d, e: %d\n", d, e);
+    return EXIT_SUCCESS;
 }

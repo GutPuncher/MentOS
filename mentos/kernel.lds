@@ -15,33 +15,25 @@ SECTIONS
     /* Put the .text section. */
     .text . : AT(ADDR(.text))
     {
-        _text_start = .;
         EXCLUDE_FILE(*boot.*.o) *(.text)
-        _text_end   = .;
     } > KERNEL_LOWMEM
 
     /* Read-only data. */
     .rodata ALIGN(4K) : AT(ADDR(.rodata))
     {
-        _rodata_start = .;
         EXCLUDE_FILE(*boot.*.o) *(.rodata)
-        _rodata_end   = .;
     } > KERNEL_LOWMEM
 
     /* Read-write data (initialized) */
     .data   ALIGN(4K) : AT(ADDR(.data))
     {
-        _data_start = .;
         EXCLUDE_FILE(*boot.*.o) *(.data)
-        _data_end   = .;
     } > KERNEL_LOWMEM
 
     /* Read-write data (uninitialized) and stack */
     .bss    ALIGN(4K) : AT(ADDR(.bss))
     {
-        _bss_start = .;
         *(.bss*)
-        _bss_end   = .;
     } > KERNEL_LOWMEM
 
     /* Put a symbol end here, it tells us where all the kernel code/data ends,

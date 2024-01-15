@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     action.sa_handler = wait_for_child;
     if (sigaction(SIGCHLD, &action, NULL) == -1) {
         printf("Failed to set signal handler. %d\n", SIGCHLD);
-        return 1;
+        return EXIT_FAILURE;
     }
 
     child_pid = fork();
@@ -55,5 +55,5 @@ int main(int argc, char *argv[])
         }
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }

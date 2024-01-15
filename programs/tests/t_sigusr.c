@@ -38,12 +38,12 @@ int main(int argc, char *argv[])
 
     if (sigaction(SIGUSR1, &action, NULL) == -1) {
         printf("Failed to set signal handler (%s).\n", SIGUSR1, strerror(errno));
-        return 1;
+        return EXIT_FAILURE;
     }
 
     if (sigaction(SIGUSR2, &action, NULL) == -1) {
         printf("Failed to set signal handler (%s).\n", SIGUSR2, strerror(errno));
-        return 1;
+        return EXIT_FAILURE;
     }
 
     kill(getpid(), SIGUSR1);
@@ -51,5 +51,6 @@ int main(int argc, char *argv[])
     kill(getpid(), SIGUSR2);
 
     while(1) { };
-    return 0;
+
+    return EXIT_SUCCESS;
 }

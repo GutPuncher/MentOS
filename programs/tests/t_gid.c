@@ -39,14 +39,14 @@ int main(int argc, char **argv)
     group_t *root_group = getgrgid(0);
     if (strcmp(root_group->gr_name, "root") != 0) {
         printf("Error in getgrgid function.");
-        return 1;
+        return EXIT_FAILURE;
     }
 
     root_group = getgrnam("root");
     if (root_group->gr_gid != 0) {
         printf("Error in getgrnam function.");
-        return 1;
+        return EXIT_FAILURE;
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }

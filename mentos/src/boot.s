@@ -33,6 +33,19 @@
 .equ                KERNEL_STACK_SIZE, 0x100000
 
 # -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+.pushsection .note.name, "a", @note           
+    .align 4
+    .long 2f - 1f         /* namesz */
+    .long 4f - 3f         /* descsz */
+    .long 18              /* type   */
+1:.asciz "MentOS"         /* name   */
+2:.align 4
+3:.long boot_entry        /* desc   */
+4:.align 4
+.popsection
+
+# -----------------------------------------------------------------------------
 # SECTION (multiboot_header)
 # -----------------------------------------------------------------------------
 .globl multiboot_header
@@ -40,11 +53,11 @@
 # This is the GRUB Multiboot header.
 multiboot_header: 
     # magic
-    .quad MULTIBOOT_HEADER_MAGIC
+    .long MULTIBOOT_HEADER_MAGIC
     # flags
-    .quad MULTIBOOT_HEADER_FLAGS
+    .long MULTIBOOT_HEADER_FLAGS
     # checksum
-    .quad MULTIBOOT_CHECKSUM
+    .long MULTIBOOT_CHECKSUM
 
 # -----------------------------------------------------------------------------
 # SECTION (data)

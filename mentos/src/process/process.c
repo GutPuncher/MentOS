@@ -4,10 +4,10 @@
 /// See LICENSE.md for details.
 
 // Setup the logging for this file (do this before any other include).
-#include "sys/kernel_levels.h"           // Include kernel log levels.
-#define __DEBUG_HEADER__ "[PROC  ]"      ///< Change header.
-#define __DEBUG_LEVEL__  LOGLEVEL_NOTICE ///< Set log level.
-#include "io/debug.h"                    // Include debugging functions.
+#include "sys/kernel_levels.h"          // Include kernel log levels.
+#define __DEBUG_HEADER__ "[PROC  ]"     ///< Change header.
+#define __DEBUG_LEVEL__  LOGLEVEL_DEBUG ///< Set log level.
+#include "io/debug.h"                   // Include debugging functions.
 
 #include "assert.h"
 #include "elf/elf.h"
@@ -91,10 +91,14 @@ static int __reset_process(task_struct *task)
         return 0;
     }
 
+    pr_debug("Switching to task page directory.\n");
+
     // Save the current page directory.
     page_directory_t *crtdir = paging_get_current_directory();
     // FIXME: Now to clear the stack a pgdir switch is made, it should be a kernel mmapping.
     paging_switch_directory_va(task->mm->pgd);
+
+    pr_debug("Clean stack (%p).\n", task->mm->start_stack);
 
     // Clean stack space.
     memset((char *)task->mm->start_stack, 0, DEFAULT_STACK_SIZE);
@@ -104,6 +108,8 @@ static int __reset_process(task_struct *task)
     task->thread.regs.useresp = task->thread.regs.ebp;
     // Enable the interrupts.
     task->thread.regs.eflags = task->thread.regs.eflags | EFLAG_IF;
+
+    pr_debug("Switching to previous page directory.\n");
 
     // Restore previous pgdir
     paging_switch_directory(crtdir);

@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     semid = semget(IPC_PRIVATE, 1, IPC_CREAT | IPC_EXCL | S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
     if (semid < 0) {
         perror("Failed to create semaphore set");
-        return 1;
+        return EXIT_FAILURE;
     }
     printf("[father] Created semaphore set (semid : %d)\n", semid);
 
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     ret = semctl(semid, 0, SETVAL, &arg);
     if (ret < 0) {
         perror("Failed to set value of semaphore");
-        return 1;
+        return EXIT_FAILURE;
     }
     printf("[father] Set semaphore value (id : %d, value : %d == 1)\n", semid, arg.val);
 
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     ret = semctl(semid, 0, GETVAL, NULL);
     if (ret < 0) {
         perror("Failed to get the value of semaphore set");
-        return 1;
+        return EXIT_FAILURE;
     }
     printf("[father] Get semaphore value (id : %d, value : %d == 1)\n", semid, ret);
 
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
         // Increment semaphore value.
         if (semop(semid, &op_child, 1) < 0) {
             perror("Failed to perform first child operation");
-            return 1;
+            return EXIT_FAILURE;
         }
         printf("[child] Succesfully performed opeation (id : %d)\n", semid);
 
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
         ret = semctl(semid, 0, GETVAL, NULL);
         if (ret < 0) {
             perror("Failed to get the value of semaphore set");
-            return 1;
+            return EXIT_FAILURE;
         }
         printf("[child] Get semaphore value (id : %d, value : %d == 1)\n", semid, ret);
         printf("[child] Exit, now.\n", semid, ret);
@@ -87,14 +87,14 @@ int main(int argc, char *argv[])
         }
         printf("[child] Correctly removed semaphore set.\n");
 
-        return 0;
+        return EXIT_SUCCESS;
     }
 
     // ========================================================================
     // Perform the operations.
     if (semop(semid, op, 2) < 0) {
         perror("Failed to perform operation");
-        return 1;
+        return EXIT_FAILURE;
     }
     printf("[father] Performed semaphore operations (id : %d)\n", semid);
 
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
     ret = semctl(semid, 0, GETVAL, NULL);
     if (ret < 0) {
         perror("Failed to get the value of semaphore set");
-        return 1;
+        return EXIT_FAILURE;
     }
     printf("[father] Get semaphore value (id : %d, value : %d == 1)\n", semid, ret);
 
@@ -115,5 +115,5 @@ int main(int argc, char *argv[])
     }
     printf("[father] Correctly removed semaphore set.\n");
 
-    return 0;
+    return EXIT_SUCCESS;
 }

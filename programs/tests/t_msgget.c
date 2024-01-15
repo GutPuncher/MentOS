@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
     key = ftok("/home/user/test7.txt", 5);
     if (key < 0) {
         perror("Failed to generate key using ftok");
-        return 1;
+        return EXIT_FAILURE;
     }
     printf("Generated key using ftok (key = %d)\n", key);
 
@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     msqid = msgget(key, IPC_CREAT | IPC_EXCL | S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
     if (msqid < 0) {
         perror("Failed to create message queue");
-        return 1;
+        return EXIT_FAILURE;
     }
     printf("Created message queue (id : %d)\n", msqid);
 
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
         sleep(3);
         // Send the message.
         __send_message(msqid, 1, &message, "General Kenobi...");
-        return 0;
+        return EXIT_SUCCESS;
     }
     // Receive the message.
     __receive_message(msqid, 1, &message);
@@ -106,5 +106,5 @@ int main(int argc, char *argv[])
         perror("Failed to remove message queue.");
     }
     printf("Correctly removed message queue.\n");
-    return 0;
+    return EXIT_SUCCESS;
 }

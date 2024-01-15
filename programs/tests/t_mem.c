@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 {
     if (argc != 3) {
         printf("%s: You must provide 2 dimensions.\n", argv[0]);
-        return 1;
+        return EXIT_FAILURE;
     }
     char *ptr;
     int rows = strtol(argv[1], &ptr, 10);
@@ -48,5 +48,5 @@ int main(int argc, char *argv[])
 
     sleep(5);
     pr_warning("Exiting!\n");
-    return 0;
+    return EXIT_SUCCESS;
 }

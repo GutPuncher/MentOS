@@ -12,7 +12,7 @@
 int main(int argc, char *argv[])
 {
     if (argc != 2) {
-        return 1;
+        return EXIT_FAILURE;
     }
     char *ptr;
     int N;
@@ -61,5 +61,5 @@ int main(int argc, char *argv[])
         break;
     }
 #endif
-    return 0;
+    return EXIT_SUCCESS;
 }

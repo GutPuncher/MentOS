@@ -39,12 +39,11 @@ int main(int argc, char *argv[])
     action.sa_handler = alarm_handler;
     if (sigaction(SIGALRM, &action, NULL) == -1) {
         printf("Failed to set signal handler (%s).\n", SIGALRM, strerror(errno));
-        return 1;
+        return EXIT_FAILURE;
     }
 
-
     alarm(5);
-    while(1) { }
+    while (1) {}
 
-    return 0;
+    return EXIT_SUCCESS;
 }
